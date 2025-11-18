@@ -31,7 +31,7 @@ def generate_code(request: CodeGeneratorRequest) -> str:
     proto = next(file for file in request.proto_file if file.name == file_name)
     dynamic_content += digest_proto(proto)
 
-  template_path = Path(__file__).parent.parent.parent / "firmware/fmt_rx.in.c"
+  template_path = Path(__file__).parent.parent / "src/fmt_rx.in.c"
   
   with open(template_path, "r") as template_file:
     static_content_with_marker = template_file.read()

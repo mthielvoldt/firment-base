@@ -1,0 +1,18 @@
+// A message structure to control a signal generator's output waveform.
+
+syntax = "proto3";
+import "fmt_base.proto";
+
+/* Project-specific messages */
+
+
+
+/* Top-level message. 
+Each message type used by the project should appear once in sub.
+Messages used most frequently should be assigned values < 16.
+*/
+message Top {
+  oneof sub {
+    FirmentErrorTlm FirmentErrorTlm = 8; 
+  }
+}

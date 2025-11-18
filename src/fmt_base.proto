@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "nanopb.proto";
+
+message FirmentErrorTlm {
+  uint32 armRxError = 1;
+  uint32 dataLost = 2;
+  uint32 modeFault = 3;
+  uint32 unhandledArmEvent = 4;
+  uint32 sendQueueFull = 5;
+  uint32 rxQueueFull = 6;
+  uint32 encodeFail = 7;
+  uint32 decodeFail = 8;
+  uint32 crcMismatch = 9;
+  uint32 crcComputeFail = 10;
+}
