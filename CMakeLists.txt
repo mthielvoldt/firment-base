@@ -39,16 +39,16 @@ add_custom_command(
     ${PROTOC}
       -I ${PROJECT_CONFIG_DIR}  # messages.proto
       -I ${CMAKE_CURRENT_SOURCE_DIR}/src # src/fmt_base.proto
-      --plugin=protoc-gen-firment=${PLUGIN_DIR}/gen-firment.py
+      --plugin=protoc-gen-fmt_rx=${PLUGIN_DIR}/gen-fmt_rx.py
       --plugin=protoc-gen-widgets=${PLUGIN_DIR}/gen-widgets.py
-      --firment_out=${PB_OUT_DIR}
+      --fmt_rx_out=${PB_OUT_DIR}
       --widgets_out=${UI_GENERATED_DIR}
       --nanopb_out=${PB_OUT_DIR}
       ${PROJECT_PROTO} fmt_base.proto ${COMPONENT_PROTOS} 
   DEPENDS
     ${VENV_DIR}
-    ${PLUGIN_DIR}/gen-firment.py
     ${CMAKE_CURRENT_SOURCE_DIR}/src/fmt_rx.in.c
+    ${PLUGIN_DIR}/gen-fmt_rx.py
     ${PLUGIN_DIR}/gen-widgets.py
     ${COMPONENT_PROTOS}
     ${PROJECT_PROTO}
