@@ -9,10 +9,14 @@
       "intelliSenseMode": "gcc-arm",
       "includePath": [
         "inc",
+        "src",  // fmt_base_msg.h
         "submodules/nanopb",
         "test",
         "test/build/_deps/cpputest-src/include",
-        "test/build/pb"
+        "test/build/pb",
+        "test/fakes/transport",
+        "test/fakes/queue",
+        "test/fakes/crc"
       ],
       "forcedInclude": [],
       "cStandard": "c11",

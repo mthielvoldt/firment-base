@@ -21,6 +21,9 @@ FetchContent_MakeAvailable(CppUTest)
 
 
 # add_subdirectory(${PORT_DIR} port) # ??? Does firment link against port
+add_subdirectory(fakes/queue) # -> provides fmt_queue
+add_subdirectory(fakes/crc) # -> provides fmt_crc, an interface lib.
+add_subdirectory(fakes/transport) # -> provides fmt_transport
 add_subdirectory(.. firment)
 
 add_executable(testExecutable

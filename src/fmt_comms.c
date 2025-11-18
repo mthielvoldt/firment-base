@@ -1,7 +1,6 @@
 #include "fmt_comms.h"
 #include "fmt_sizes.h"
 #include "fmt_transport.h" // transport_sendNext(), FMT_BUILTIN_CRC
-#include "fmt_assert.h"
 #include "queue.h"
 
 #include <crc_mcuDetails.h> // FMT_BUILTIN_CRC
@@ -14,6 +13,9 @@
 #include <pb_decode.h>
 #include <stdint.h>
 #include <stdbool.h>
+
+#define ASSERT_ARM_OK(x) if (x != ARM_DRIVER_OK) return false;
+#define ASSERT_SUCCESS(x) if (!x) return false;
 
 static FirmentErrorTlm errCounts = {};
 

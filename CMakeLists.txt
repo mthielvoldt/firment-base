@@ -18,9 +18,16 @@ target_include_directories(firment-base
   PUBLIC
     inc # fmt_rx.h used by fmt_rx.pb.c
   PRIVATE
+    src # fmt_base_msg.h
     ${PROJECT_CONFIG_DIR} # project_msg.h
     ${PB_OUT_DIR} # project_msg.pb.h
     ${NANOPB_DIR} # pb.h
+)
+
+target_link_libraries(firment-base 
+  fmt_transport
+  fmt_queue
+  fmt_crc
 )
 
 set(UI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/web-ui)

@@ -1,0 +1,1 @@
+#define FMT_BUILTIN_CRC 1
