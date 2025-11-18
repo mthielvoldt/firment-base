@@ -10,6 +10,7 @@
       "includePath": [
         "inc",
         "submodules/nanopb",
+        "test",
         "test/build/_deps/cpputest-src/include",
         "test/build/pb"
       ],

@@ -1,7 +1,7 @@
-#ifndef fmt_comms_h
-#define fmt_comms_h
+#ifndef FMT_COMMS_H
+#define FMT_COMMS_H
 
-#include <messages.pb.h>
+#include <project_msg.pb.h>
 
 bool fmt_initComms(void);
 
@@ -23,4 +23,4 @@ extern bool (*fmt_sendMsg)(Top message);
 
 extern bool (*fmt_getMsg)(Top *message);
 
-#endif // fmt_comms_h
+#endif // FMT_COMMS_H

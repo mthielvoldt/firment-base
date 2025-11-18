@@ -1,7 +1,7 @@
 // A message structure to control a signal generator's output waveform.
 
 syntax = "proto3";
-import "fmt_base.proto";
+import "fmt_base_msg.proto";
 
 /* Project-specific messages */
 
