@@ -1,6 +1,4 @@
 
-# Get cmake to recognize up-to-date protobufs
-
 # Write tests
 
 # Interface Repos

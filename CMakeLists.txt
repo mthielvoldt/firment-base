@@ -38,7 +38,7 @@ set(UI_GENERATED_DIR ${UI_DIR}/src/generated)
 add_custom_command(
   OUTPUT
     ${PB_OUT_DIR}/project_msg.pb.c 
-    ${PB_OUT_DIR}/fmt_base.pb.c 
+    ${PB_OUT_DIR}/fmt_base_msg.pb.c 
     ${PB_OUT_DIR}/fmt_rx.pb.c 
     ${UI_GENERATED_DIR}/widgets.pb.tsx
   COMMAND 

@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "nanopb.proto";
-
 message FirmentErrorTlm {
   uint32 armRxError = 1;
   uint32 dataLost = 2;
