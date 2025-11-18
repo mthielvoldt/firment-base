@@ -14,6 +14,14 @@ add_library(firment-base
   src/fmt_comms.c
 )
 
+target_include_directories(firment-base
+  PUBLIC
+    inc # fmt_rx.h used by fmt_rx.pb.c
+  PRIVATE
+    ${PB_OUT_DIR} # messages.pb.h
+    ${NANOPB_DIR} # fmt_spi.h > messages.pb.h > pb.h
+)
+
 set(UI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/web-ui)
 set(UI_DIST_DIR      ${UI_DIR}/dist)
 set(UI_SRC_DIR       ${UI_DIR}/src)

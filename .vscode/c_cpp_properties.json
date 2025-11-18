@@ -10,7 +10,8 @@
       "includePath": [
         "inc",
         "submodules/nanopb",
-        "test/build/_deps/cpputest-src/include"
+        "test/build/_deps/cpputest-src/include",
+        "test/build/pb"
       ],
       "forcedInclude": [],
       "cStandard": "c11",
