@@ -17,7 +17,7 @@ bool initQueue(
 
 bool enqueueBack(queue_t *queue, const void *src)
 {
-  return enQReturn;
+  return mock().actualCall("enqueueBack").returnBoolValue();
 }
 
 bool dequeueFront(queue_t *queue, void *result)
