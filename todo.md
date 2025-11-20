@@ -13,3 +13,4 @@
 
 # Test-inspired fixes
 - queue getters should take *const* queue_t*
+- fmt_sendMsg() should take a const Top *, not Top

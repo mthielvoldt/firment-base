@@ -65,7 +65,7 @@ static bool fmt_sendMsg_prod(Top message)
 
   bool enqueueOk = false;
   bool encodeOk = pb_encode(&ostream, Top_fields, &message);
-  if (encodeOk)
+  if (encodeOk && ostream.bytes_written > 0)
   {
     txPacket[LENGTH_POSITION] = ostream.bytes_written;
     addCRC(txPacket);
