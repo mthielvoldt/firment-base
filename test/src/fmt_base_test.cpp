@@ -25,7 +25,7 @@ TEST_GROUP(fmt_base)
 
 bool fake_sendMsg(Top msg)
 {
-  return mock().actualCall("fmt_sendMsg").returnBoolValue();
+  return mock().actualCall("fmt_sendMsg").withParameter("which_sub", msg.which_sub).returnBoolValue();
 }
 
 TEST(fmt_base, initComms_succeeds)
@@ -62,7 +62,8 @@ TEST(fmt_base, rxCallback_throws_if_rxQ_full)
   rxCallback(packet);
 
   UT_PTR_SET(fmt_sendMsg, fake_sendMsg);
-  mock().expectOneCall("fmt_sendMsg").andReturnValue(true);
+  mock().expectOneCall("fmt_sendMsg").
+    withIntParameter("which_sub", Top_FirmentErrorTlm_tag).andReturnValue(true);
   reportCommsErrors();
 }
 
