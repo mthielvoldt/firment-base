@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.25)
 
 add_library(fmt_queue
-  queue_test.c
+  queue_test.cpp
 )
+
+target_link_libraries(fmt_queue CppUTestExt)
 
 target_include_directories(fmt_queue
   PUBLIC

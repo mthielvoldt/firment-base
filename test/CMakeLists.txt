@@ -26,11 +26,15 @@ add_subdirectory(fakes/crc) # -> provides fmt_crc, an interface lib.
 add_subdirectory(fakes/transport) # -> provides fmt_transport
 add_subdirectory(.. firment)
 
-add_executable(testExecutable
-  src/testMain.cpp
+add_executable(fmt_base_test
+  src/fmt_base_test.cpp
+  src/fmt_rx_test.cpp
+  src/test_main.cpp
+  src/test_shared.c
 )
 
-target_link_libraries(testExecutable
+target_link_libraries(fmt_base_test
   CppUTest
-  firment-base
+  CppUTestExt
+  fmt_base
 )

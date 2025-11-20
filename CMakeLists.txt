@@ -7,24 +7,27 @@ set(PLUGIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pb-plugins)
 set(PROTOC ${NANOPB_DIR}/generator/protoc)
 set(PB_OUT_DIR ${PROJECT_BINARY_DIR}/pb)
 
-add_library(firment-base
+add_library(fmt_base
   ${PB_OUT_DIR}/project_msg.pb.c 
   ${PB_OUT_DIR}/fmt_base_msg.pb.c
   ${PB_OUT_DIR}/fmt_rx.pb.c
+  ${NANOPB_DIR}/pb_encode.c
+  ${NANOPB_DIR}/pb_decode.c
+  ${NANOPB_DIR}/pb_common.c
   src/fmt_comms.c
 )
 
-target_include_directories(firment-base
+target_include_directories(fmt_base
   PUBLIC
     inc # fmt_rx.h used by fmt_rx.pb.c
+    ${PB_OUT_DIR} # project_msg.pb.h
+    ${NANOPB_DIR} # pb.h
   PRIVATE
     src # fmt_base_msg.h
     ${PROJECT_CONFIG_DIR} # project_msg.h
-    ${PB_OUT_DIR} # project_msg.pb.h
-    ${NANOPB_DIR} # pb.h
 )
 
-target_link_libraries(firment-base 
+target_link_libraries(fmt_base 
   fmt_transport
   fmt_queue
   fmt_crc

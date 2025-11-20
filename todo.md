@@ -10,3 +10,6 @@
 # Make sizes customizable
 
 # Only build what's needed in CppUTest
+
+# Test-inspired fixes
+- queue getters should take *const* queue_t*
