@@ -1,6 +1,7 @@
 #include <CppUTestExt/MockSupport.h>
 
-extern "C" {
+extern "C"
+{
 #include "queue.h"
 #include <string.h>
 }
@@ -22,18 +23,13 @@ bool enqueueBack(queue_t *queue, const void *src)
 
 bool dequeueFront(queue_t *queue, void *result)
 {
-  if (deQResult)
-  {
-    memcpy(result, deQResult, queue->itemSize);
-    return true;
-  }
-  else
-  {
-    return false;
-  }
+  return mock()
+    .actualCall("dequeueFront")
+    .withOutputParameter("result", result)
+    .returnBoolValue();
 }
 
 uint32_t numItemsInQueue(queue_t *queue)
 {
-  return 0;
+  return mock().actualCall("numItemsInQueue").returnUnsignedIntValue();
 }

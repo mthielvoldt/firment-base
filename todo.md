@@ -1,6 +1,4 @@
 
-# Write tests
-
 # Interface Repos
 - Pull transport.h into interface repo
 - Pull queue.h into interface repo. 
