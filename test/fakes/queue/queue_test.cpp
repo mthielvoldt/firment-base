@@ -41,10 +41,3 @@ UBaseType_t uxQueueMessagesWaiting(const QueueHandle_t xQueue)
 {
   return mock().actualCall("uxQueueMessagesWaiting").returnUnsignedIntValue();
 }
-
-BaseType_t xQueueSetHighestSenderPriority(
-    QueueHandle_t xQueue,
-    UBaseType_t priority)
-{
-  return pdTRUE;
-}

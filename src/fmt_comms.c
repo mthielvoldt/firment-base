@@ -59,10 +59,10 @@ static void acceptMsgIfValid(const uint8_t rxPacket[])
   }
 }
 
-/** Transport-facing interface.  Provided to transport by linkTransport(). 
+/** Transport-facing interface.  Provided to transport by linkTransport().
  * Called by transport when tx is ready.
  */
-static bool pullTxPacket_prod(uint8_t * const txBuffer)
+static bool pullTxPacket_prod(uint8_t *const txBuffer)
 {
   return xQueueReceive(sendQueue, txBuffer, 0);
 }
@@ -196,3 +196,10 @@ static bool checkCRCMatch(const uint8_t packet[])
   return status == ARM_DRIVER_OK; //  && crcMatch;
 }
 #endif
+
+__attribute__((weak)) BaseType_t xQueueSetHighestSenderPriority(
+    QueueHandle_t xQueue,
+    UBaseType_t priority)
+{
+  return pdFALSE;
+}
