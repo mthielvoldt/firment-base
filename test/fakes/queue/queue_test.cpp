@@ -9,27 +9,42 @@ extern "C"
 static const uint8_t *deQResult = NULL;
 static bool enQReturn = true;
 
-bool initQueue(
-    size_t itemSize, uint32_t length, queue_t *queue, uint8_t *itemsStore,
-    uint32_t highestSenderPriority)
+QueueHandle_t xQueueCreateStatic(
+    UBaseType_t uxQueueLength,
+    UBaseType_t uxItemSize,
+    uint8_t *pucQueueStorageBuffer,
+    StaticQueue_t *pxQueueBuffer)
 {
-  return mock().actualCall("initQueue").returnBoolValue();
+  return (QueueHandle_t)mock().actualCall("xQueueCreateStatic").returnPointerValue();
 }
 
-bool enqueueBack(queue_t *queue, const void *src)
+BaseType_t xQueueSend(
+    QueueHandle_t xQueue,
+    const void *const pvItemToQueue,
+    TickType_t xTicksToWait)
 {
-  return mock().actualCall("enqueueBack").returnBoolValue();
+  return mock().actualCall("xQueueSend").returnIntValue();
 }
 
-bool dequeueFront(queue_t *queue, void *result)
+BaseType_t xQueueReceive(
+    QueueHandle_t xQueue,
+    void *const pvBuffer,
+    TickType_t xTicksToWait)
 {
   return mock()
-    .actualCall("dequeueFront")
-    .withOutputParameter("result", result)
-    .returnBoolValue();
+      .actualCall("xQueueReceive")
+      .withOutputParameter("pvBuffer", pvBuffer)
+      .returnIntValue();
 }
 
-uint32_t numItemsInQueue(queue_t *queue)
+UBaseType_t uxQueueMessagesWaiting(const QueueHandle_t xQueue)
 {
-  return mock().actualCall("numItemsInQueue").returnUnsignedIntValue();
+  return mock().actualCall("uxQueueMessagesWaiting").returnUnsignedIntValue();
+}
+
+BaseType_t xQueueSetHighestSenderPriority(
+    QueueHandle_t xQueue,
+    UBaseType_t priority)
+{
+  return pdTRUE;
 }

@@ -5,6 +5,10 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+#define pdTRUE ((BaseType_t)1)
+#define pdFALSE ((BaseType_t)0)
+#define errQUEUE_EMPTY ((BaseType_t)0)
+#define errQUEUE_FULL ((BaseType_t)0)
 typedef struct
 {
   uint32_t highestSenderPriority; // min numeric value; highest preemtion priority.
@@ -14,24 +18,36 @@ typedef struct
   volatile uint_fast16_t numItemsWaiting;
   size_t itemSize;
   uint8_t *items;
-} queue_t;
+} StaticQueue_t;
 
-bool initQueue(
-    size_t itemSize, uint32_t length, queue_t *queue, uint8_t *itemsStore, 
-    uint32_t highestSenderPriority);
+typedef StaticQueue_t *QueueHandle_t;
+typedef uint32_t UBaseType_t;
+typedef int32_t BaseType_t;
+typedef uint32_t TickType_t;
 
-bool enqueueBack(queue_t *queue, const void *src);
+QueueHandle_t xQueueCreateStatic(
+    UBaseType_t uxQueueLength,
+    UBaseType_t uxItemSize,
+    uint8_t *pucQueueStorageBuffer,
+    StaticQueue_t *pxQueueBuffer);
 
-bool enqueueFront(queue_t *queue, const void *src);
+BaseType_t xQueueSend(
+    QueueHandle_t xQueue,
+    const void *const pvItemToQueue,
+    TickType_t xTicksToWait);
 
-bool peekFront(queue_t *queue, void *result);
+BaseType_t xQueueReceive(
+    QueueHandle_t xQueue,
+    void *const pvBuffer,
+    TickType_t xTicksToWait);
 
-bool dequeueFront(queue_t *queue, void *result);
+UBaseType_t uxQueueMessagesWaiting(const QueueHandle_t xQueue);
 
-bool dequeueBack(queue_t *queue, void *result);
-
-uint32_t numItemsInQueue(queue_t *queue);
-
-uint32_t emptySpacesInQueue(queue_t *queue);
+/** Extends from FreeRTOS queue for bare-metal applications that leverage
+ * NVIC for priority management.
+ */
+BaseType_t xQueueSetHighestSenderPriority(
+    QueueHandle_t xQueue,
+    UBaseType_t priority);
 
 #endif // queue_H

@@ -14,16 +14,20 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define ASSERT_ARM_OK(x) if (x != ARM_DRIVER_OK) return false;
-#define ASSERT_SUCCESS(x) if (!x) return false;
+#define ASSERT_ARM_OK(x)  \
+  if (x != ARM_DRIVER_OK) \
+    return false;
+#define ASSERT_SUCCESS(x) \
+  if (!x)                 \
+    return false;
 
 static FirmentErrorTlm errCounts = {};
 
 // Initialize with the start sequence in header.
 static uint8_t sendQueueStore[MAX_PACKET_SIZE_BYTES * SEND_QUEUE_LENGTH];
-static queue_t sendQueue[1];
+static StaticQueue_t sendQueue[1];
 static uint8_t rxQueueStore[MAX_PACKET_SIZE_BYTES * RX_QUEUE_LENGTH];
-static queue_t rxQueue[1];
+static StaticQueue_t rxQueue[1];
 
 #if !FMT_BUILTIN_CRC
 extern FMT_DRIVER_CRC Driver_CRC0;
@@ -33,10 +37,8 @@ static FMT_DRIVER_CRC *crc = &Driver_CRC0;
 static void addCRC(uint8_t packet[MAX_PACKET_SIZE_BYTES]);
 static bool checkCRCMatch(const uint8_t packet[]);
 
-/**
- * Passes queues to underlying transport (spi, uart)
- *
- *
+/** Transport-facing interface.  Provided to transport by linkTransport().
+ * Called by transport when a received message is ready to be handled.
  */
 static void acceptMsgIfValid(const uint8_t rxPacket[])
 {
@@ -45,7 +47,7 @@ static void acceptMsgIfValid(const uint8_t rxPacket[])
 
   if (crcMatch)
   {
-    bool success = enqueueBack(rxQueue, rxPacket);
+    bool success = xQueueSend(rxQueue, rxPacket, 0);
     if (!success)
     {
       errCounts.rxQueueFull++;
@@ -57,6 +59,15 @@ static void acceptMsgIfValid(const uint8_t rxPacket[])
   }
 }
 
+/** Transport-facing interface.  Provided to transport by linkTransport(). 
+ * Called by transport when tx is ready.
+ */
+static bool pullTxPacket_prod(uint8_t * const txBuffer)
+{
+  return xQueueReceive(sendQueue, txBuffer, 0);
+}
+
+/** Application-facing interface, accessed through fmt_sendMsg pointer. */
 static bool fmt_sendMsg_prod(Top message)
 {
   uint8_t txPacket[MAX_PACKET_SIZE_BYTES] = {0};
@@ -69,7 +80,7 @@ static bool fmt_sendMsg_prod(Top message)
   {
     txPacket[LENGTH_POSITION] = ostream.bytes_written;
     addCRC(txPacket);
-    enqueueOk = enqueueBack(sendQueue, txPacket);
+    enqueueOk = xQueueSend(sendQueue, txPacket, 0);
     if (!enqueueOk)
     {
       errCounts.sendQueueFull++;
@@ -90,10 +101,10 @@ bool (*fmt_sendMsg)(Top message) = fmt_sendMsg_prod;
 static bool fmt_getMsg_prod(Top *message)
 {
   bool success = false;
-  if (numItemsInQueue(rxQueue) > 0)
+  if (uxQueueMessagesWaiting(rxQueue) > 0)
   {
     uint8_t packet[MAX_PACKET_SIZE_BYTES];
-    dequeueFront(rxQueue, packet);
+    xQueueReceive(rxQueue, packet, 0);
     uint8_t messageLen = packet[LENGTH_POSITION];
 
     /* Create a stream that reads from the buffer. */
@@ -111,18 +122,20 @@ bool (*fmt_getMsg)(Top *message) = fmt_getMsg_prod;
 
 bool fmt_initComms(void)
 {
-  ASSERT_SUCCESS(initQueue(
-      MAX_PACKET_SIZE_BYTES,
+  ASSERT_SUCCESS(xQueueCreateStatic(
       SEND_QUEUE_LENGTH,
-      sendQueue,
-      sendQueueStore,
-      MAX_SENDER_PRIORITY));
-  ASSERT_SUCCESS(initQueue(
       MAX_PACKET_SIZE_BYTES,
+      sendQueueStore,
+      sendQueue));
+
+  ASSERT_SUCCESS(xQueueCreateStatic(
       RX_QUEUE_LENGTH,
-      rxQueue,
+      MAX_PACKET_SIZE_BYTES,
       rxQueueStore,
-      MAX_SENDER_PRIORITY));
+      rxQueue));
+
+  xQueueSetHighestSenderPriority(sendQueue, MAX_SENDER_PRIORITY);
+  xQueueSetHighestSenderPriority(rxQueue, MAX_SENDER_PRIORITY);
 
 #if !FMT_BUILTIN_CRC
   ASSERT_ARM_OK(crc->Initialize());
@@ -135,7 +148,7 @@ bool fmt_initComms(void)
   if (fmt_linkTransport == NULL)
     ASSERT_SUCCESS(fmt_initTransport());
 
-  ASSERT_SUCCESS(fmt_linkTransport(sendQueue, acceptMsgIfValid));
+  ASSERT_SUCCESS(fmt_linkTransport(pullTxPacket_prod, acceptMsgIfValid));
   return true;
 }
 

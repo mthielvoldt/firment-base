@@ -4,6 +4,5 @@
 #include "fmt_transport.h"
 
 const rxCallback_t getRxCallback(void);
-queue_t* getSendQueue(void);
 
 #endif

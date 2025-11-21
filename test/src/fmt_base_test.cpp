@@ -5,6 +5,7 @@ extern "C"
 {
 #include "test_shared.h"
 #include <fmt_comms.h>
+#include <queue.h>
 #include <fmt_transport_test.h>
 #include <signal.h> // for debugging tests: raise(SIGINT);
 }
@@ -13,7 +14,7 @@ TEST_GROUP(fmt_base)
 {
   void setup()
   {
-    mock().expectNCalls(2, "initQueue").andReturnValue(true);
+    mock().expectNCalls(2, "xQueueCreateStatic").andReturnValue((void*)1);
     fmt_initComms();
   };
   void teardown()
@@ -55,7 +56,7 @@ TEST(fmt_base, rxCallback_enqueues_if_crc_good)
   const uint8_t packet[MAX_PACKET_SIZE_BYTES] = {};
 
   // check
-  mock().expectOneCall("enqueueBack").andReturnValue(true);
+  mock().expectOneCall("xQueueSend").andReturnValue(pdTRUE);
   rxCallback(packet);
 
   expectNoErrors();
@@ -71,7 +72,7 @@ TEST(fmt_base, rxCallback_throws_if_rxQ_full)
   const rxCallback_t rxCallback = getRxCallback();
   const uint8_t packet[MAX_PACKET_SIZE_BYTES] = {};
 
-  mock().expectOneCall("enqueueBack").andReturnValue(false);
+  mock().expectOneCall("xQueueSend").andReturnValue(errQUEUE_FULL);
   rxCallback(packet);
 
   expectErrors();
@@ -80,7 +81,7 @@ TEST(fmt_base, rxCallback_throws_if_rxQ_full)
 TEST(fmt_base, sendMsg_enqueues_with_crc_if_encode_succeeds)
 {
   Top *msg = getGoodMsg();
-  mock().expectOneCall("enqueueBack").andReturnValue(true);
+  mock().expectOneCall("xQueueSend").andReturnValue(pdTRUE);
   fmt_sendMsg(*msg);
   expectNoErrors();
 }
@@ -88,7 +89,7 @@ TEST(fmt_base, sendMsg_enqueues_with_crc_if_encode_succeeds)
 TEST(fmt_base, sendMsg_throws_if_sendQ_full)
 {
   Top *msg = getGoodMsg();
-  mock().expectOneCall("enqueueBack").andReturnValue(false);
+  mock().expectOneCall("xQueueSend").andReturnValue(errQUEUE_FULL);
   fmt_sendMsg(*msg);
   expectErrors();
 }
@@ -96,7 +97,7 @@ TEST(fmt_base, sendMsg_throws_if_sendQ_full)
 TEST(fmt_base, sendMsg_throws_if_encode_fails)
 {
   Top badMsg = {};
-  mock().expectNoCall("enqueueBack");
+  mock().expectNoCall("xQueueSend");
   fmt_sendMsg(badMsg);
   expectErrors();
 }
@@ -107,11 +108,11 @@ TEST(fmt_base, getMsg_places_decoded_if_rxQ_has_packet)
   uint8_t encodedMsg [MAX_PACKET_SIZE_BYTES];
   encode(encodedMsg, *goodMsg);
 
-  mock().expectOneCall("numItemsInQueue").andReturnValue(1U);
+  mock().expectOneCall("uxQueueMessagesWaiting").andReturnValue(1U);
   mock()
-    .expectOneCall("dequeueFront")
-    .withOutputParameterReturning("result", encodedMsg, MAX_PACKET_SIZE_BYTES)
-    .andReturnValue(true);
+    .expectOneCall("xQueueReceive")
+    .withOutputParameterReturning("pvBuffer", encodedMsg, MAX_PACKET_SIZE_BYTES)
+    .andReturnValue(pdTRUE);
   
   Top resultMsg = {};
   fmt_getMsg(&resultMsg);
@@ -120,8 +121,8 @@ TEST(fmt_base, getMsg_places_decoded_if_rxQ_has_packet)
 
 TEST(fmt_base, getMsg_returns_false_if_rxQ_empty)
 {
-  mock().expectOneCall("numItemsInQueue").andReturnValue(0);
-  mock().expectNoCall("dequeueFront");
+  mock().expectOneCall("uxQueueMessagesWaiting").andReturnValue(0);
+  mock().expectNoCall("xQueueReceive");
 
   Top resultMsg;
   CHECK_FALSE(fmt_getMsg(&resultMsg));
@@ -133,10 +134,10 @@ TEST(fmt_base, getMsg_throws_if_decode_fails)
   uint8_t badPacket[MAX_PACKET_SIZE_BYTES];
   memset(badPacket, 0xFF, sizeof(badPacket));
 
-  mock().expectOneCall("numItemsInQueue").andReturnValue(1);
-  mock().expectOneCall("dequeueFront")
-    .withOutputParameterReturning("result", badPacket, MAX_PACKET_SIZE_BYTES)
-    .andReturnValue(true);
+  mock().expectOneCall("uxQueueMessagesWaiting").andReturnValue(1);
+  mock().expectOneCall("xQueueReceive")
+    .withOutputParameterReturning("pvBuffer", badPacket, MAX_PACKET_SIZE_BYTES)
+    .andReturnValue(pdTRUE);
 
   Top resultMsg;
   CHECK_FALSE(fmt_getMsg(&resultMsg));
@@ -146,7 +147,7 @@ TEST(fmt_base, getMsg_throws_if_decode_fails)
 /* Placeholder for when CRC is supported */
 // TEST(fmt_base, getMsg_throws_if_crc_bad)
 // {
-//   mock().expectOneCall("numItemsInQueue").andReturnValue(1);
+//   mock().expectOneCall("uxQueueMessagesWaiting").andReturnValue(1);
 //   Top resultMsg;
 //   CHECK_FALSE(fmt_getMsg(&resultMsg));
 //   expectErrors();

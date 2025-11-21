@@ -13,6 +13,7 @@
         "submodules/nanopb",
         "test",
         "test/build/_deps/cpputest-src/include",
+        "test/build/_deps/fmt-transport-iface-src",
         "test/build/pb",
         "test/fakes/transport",
         "test/fakes/queue",
