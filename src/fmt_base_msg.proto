@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "nanopb.proto";
 
 message FirmentErrorTlm {
   uint32 armRxError = 1;
@@ -11,4 +12,19 @@ message FirmentErrorTlm {
   uint32 decodeFail = 8;
   uint32 crcMismatch = 9;
   uint32 crcComputeFail = 10;
+}
+
+message ResetCtl {
+}
+
+/* Needed for device discovery - sent to "hello" topic.*/
+message Version {
+  uint32 major = 1;
+  uint32 minor = 2;
+  uint32 patch = 3;
+  uint32 buildId = 4;
+  uint32 upTime = 5;
+  uint32 pcbId = 6;
+  uint32 deviceId = 7;
+  string project = 8 [(nanopb).max_size = 8 ];
 }

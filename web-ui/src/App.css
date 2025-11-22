@@ -1,0 +1,73 @@
+#root {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.row-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.widget-column {
+  flex-basis: 25%;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.plot-column {
+  flex-basis: 50%;
+  flex-grow: 1; /* grow to fill next row when wrapping */
+  flex-shrink: 1;
+}
+
+.widget {
+  margin: 4px;
+  padding: 6px;
+  text-align: left;
+  text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.widget:hover,
+.widget:focus,
+.widget:active {
+  border-color: #0070f3;
+}
+
+summary, .widget-head {
+  font-size: 1.2rem;
+  margin: 0 0 10px 0;
+}
+
+span {
+  margin-right: 5px;
+}
+
+.field p {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.pill {
+  padding: 0px 7px;
+  margin: 3px;
+  border-radius: 0.5rem;
+}
+.problem-colors {
+  background-color: RGBA(var(--problem-background-color));
+  color: #fff;
+}
+.success-colors {
+  background-color: RGBA(var(--success-background-color));
+  color: #fff;
+}
+.warn-colors {
+  background-color: RGBA(var(--warn-background-color));
+  color: #000;
+}
