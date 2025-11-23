@@ -1,10 +1,8 @@
 {
   "version": 4,
   "configurations": [
-    //esp32s3
     {
-      "name": "esp32s3-xmc4700",
-      "compilerPath": "/home/rileyt/compilers/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc",
+      "name": "test",
       "compilerArgs": [],
       "intelliSenseMode": "gcc-arm",
       "includePath": [
@@ -22,10 +20,7 @@
       "forcedInclude": [],
       "cStandard": "c11",
       "cppStandard": "c++11",
-      "defines": [
-        "CONFIG_MQTT_PROTOCOL_5 1",
-        "XMC4700_F144x2048"
-      ]
+      "defines": []
     }
   ]
 }

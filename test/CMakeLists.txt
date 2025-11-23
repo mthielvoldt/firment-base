@@ -7,9 +7,6 @@ set(PROJECT_CONFIG_DIR ${CMAKE_CURRENT_LIST_DIR})
 include(../cmake/version.cmake) # -> VERSION_SEM
 project(firment_test  VERSION ${VERSION_SEM} LANGUAGES CXX C)
 
-
-# used in example test, may not be needed.
-# set(CPPUTEST_INC_DIR ${PROJECT_SOURCE_DIR}/cpputest/include) 
 include(FetchContent)
 FetchContent_Declare(
     CppUTest
@@ -19,8 +16,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(CppUTest)
 
-
-# add_subdirectory(${PORT_DIR} port) # ??? Does firment link against port
 add_subdirectory(fakes/queue) # -> provides fmt_queue
 add_subdirectory(fakes/crc) # -> provides fmt_crc, an interface lib.
 add_subdirectory(fakes/transport) # -> provides fmt_transport
