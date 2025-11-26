@@ -3,6 +3,6 @@
 
 #include "fmt_transport.h"
 
-const rxCallback_t getRxCallback(void);
+rxCallback_t getRxCallback(void);
 
 #endif

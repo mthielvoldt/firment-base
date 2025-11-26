@@ -34,7 +34,7 @@ bool fmt_initTransport(void)
   return true;
 }
 
-const rxCallback_t getRxCallback(void)
+rxCallback_t getRxCallback(void)
 {
   return _rxCallback;
 }
