@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "test",
+      "compilerPath": "/bin/gcc",
       "compilerArgs": [],
-      "intelliSenseMode": "gcc-arm",
       "includePath": [
         "inc",
         "src",  // fmt_base_msg.h
