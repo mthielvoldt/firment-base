@@ -24,10 +24,13 @@
 static FirmentErrorTlm errCounts = {};
 
 // Initialize with the start sequence in header.
-static uint8_t sendQueueStore[MAX_PACKET_SIZE_BYTES * SEND_QUEUE_LENGTH];
-static StaticQueue_t sendQueue[1];
-static uint8_t rxQueueStore[MAX_PACKET_SIZE_BYTES * RX_QUEUE_LENGTH];
-static StaticQueue_t rxQueue[1];
+static uint8_t sendQueueItemStore[MAX_PACKET_SIZE_BYTES * SEND_QUEUE_LENGTH];
+static StaticQueue_t sendQueueMetaStore[1];
+static QueueHandle_t sendQueue = NULL;
+
+static uint8_t rxQueueItemStore[MAX_PACKET_SIZE_BYTES * RX_QUEUE_LENGTH];
+static StaticQueue_t rxQueueMetaStore[1];
+static QueueHandle_t rxQueue = NULL;
 
 #if !FMT_BUILTIN_CRC
 extern FMT_DRIVER_CRC Driver_CRC0;
@@ -122,18 +125,19 @@ bool (*fmt_getMsg)(Top *message) = fmt_getMsg_prod;
 
 bool fmt_initComms(void)
 {
-  ASSERT_SUCCESS(xQueueCreateStatic(
+  sendQueue = xQueueCreateStatic(
       SEND_QUEUE_LENGTH,
       MAX_PACKET_SIZE_BYTES,
-      sendQueueStore,
-      sendQueue));
+      sendQueueItemStore,
+      sendQueueMetaStore);
 
-  ASSERT_SUCCESS(xQueueCreateStatic(
+  rxQueue = xQueueCreateStatic(
       RX_QUEUE_LENGTH,
       MAX_PACKET_SIZE_BYTES,
-      rxQueueStore,
-      rxQueue));
+      rxQueueItemStore,
+      rxQueueMetaStore);
 
+  ASSERT_SUCCESS((sendQueue && rxQueue))
   xQueueSetHighestSenderPriority(sendQueue, MAX_SENDER_PRIORITY);
   xQueueSetHighestSenderPriority(rxQueue, MAX_SENDER_PRIORITY);
 
