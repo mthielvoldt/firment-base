@@ -32,4 +32,6 @@ target_link_libraries(fmt_base_test
   CppUTest
   CppUTestExt
   fmt_base
+  fmt_queue
+  fmt_transport
 )

@@ -28,11 +28,16 @@ target_include_directories(fmt_base
     ${PROJECT_CONFIG_DIR} # project_msg.h
 )
 
-target_link_libraries(fmt_base 
+target_link_libraries(fmt_base PRIVATE
   fmt_transport
   fmt_queue
   fmt_crc
 )
+if(ESP_PLATFORM)
+  target_link_libraries(fmt_base PRIVATE idf::fmt_queue)
+else()
+  target_link_libraries(fmt_base PRIVATE fmt_queue)
+endif()
 
 set(UI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/web-ui)
 set(UI_GENERATED_DIR ${UI_DIR}/src/generated)
