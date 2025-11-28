@@ -30,7 +30,6 @@ target_include_directories(fmt_base
 
 target_link_libraries(fmt_base PRIVATE
   fmt_transport
-  fmt_queue
   fmt_crc
 )
 if(ESP_PLATFORM)
