@@ -146,12 +146,7 @@ bool fmt_initComms(void)
   ASSERT_ARM_OK(crc->PowerControl(ARM_POWER_FULL));
 #endif
 
-  /* fmt_initTransport does the appropriate init for the transport selected in
-  comm_pcbDetails.h (spi, uart).  It assigns fmt_linkTransport to a transport-specific function*/
-
-  if (fmt_linkTransport == NULL)
-    ASSERT_SUCCESS(fmt_initTransport());
-
+  ASSERT_SUCCESS(fmt_initTransport());
   ASSERT_SUCCESS(fmt_linkTransport(pullTxPacket_prod, acceptMsgIfValid));
   return true;
 }
@@ -207,3 +202,4 @@ __attribute__((weak)) BaseType_t xQueueSetHighestSenderPriority(
 {
   return pdFALSE;
 }
+
