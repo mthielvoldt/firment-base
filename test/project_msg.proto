@@ -14,7 +14,8 @@ Messages used most frequently should be assigned values < 16.
 message Top {
   oneof sub {
     FirmentErrorTlm FirmentErrorTlm = 8; 
-    Version Version = 9;
+    Hello Hello = 9;
+    Version Version = 11;
     ResetCtl ResetCtl = 14;
   }
 }

@@ -25,6 +25,9 @@ message Version {
   uint32 buildId = 4;
   uint32 upTime = 5;
   uint32 pcbId = 6;
-  uint32 deviceId = 7;
-  string project = 8 [(nanopb).max_size = 8 ];
+}
+
+message Hello {
+  uint32 deviceId = 1;
+  string project = 2 [(nanopb).max_size = 32 ];
 }

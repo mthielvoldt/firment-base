@@ -51,13 +51,13 @@ export default function BrokerAddress({ showBrokerUrl = false }) {
     staleTimeout = setTimeout(() => { setConnectStatus("stale") }, 2000);
   }
 
-  interface Version {
+  interface Hello {
     project: string;
     deviceId: number;
   };
 
-  function onHelloMessage(versionData: Version) {
-    const newDevice = versionData.project + "/" + versionData.deviceId;
+  function onHelloMessage(helloData: Hello) {
+    const newDevice = helloData.project + "/" + helloData.deviceId;
     setOnlineDevices((prev) => ({...prev, [newDevice]: newDevice}))
   }
   function onConnectFail() {

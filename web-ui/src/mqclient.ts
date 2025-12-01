@@ -16,7 +16,7 @@ export function setupMq(
   brokerHost: string,
   onSubscribe: () => void,
   onMessage: () => void,
-  onHelloMessage: (versionData: pb.Version) => void) {
+  onHelloMessage: (versionData: pb.Hello) => void) {
   if (ranOnce) {
     teardownMq();
   }
